@@ -1,0 +1,33 @@
+name: Build Launcher
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Cache FetchContent deps
+      uses: actions/cache@v4
+      with:
+        path: build/_deps
+        key: ${{ runner.os }}-fetchcontent-${{ hashFiles('CMakeLists.txt') }}
+    
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DOPTION_USE_SYSTEM_LIBJPEG:BOOL=OFF -DOPTION_USE_SYSTEM_LIBPNG:BOOL=OFF -DOPTION_USE_SYSTEM_ZLIB:BOOL=OFF
+
+    - name: Build
+      run: cmake --build build --config Release --parallel
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fantasy-launcher-windows
+        path: build/Release/fantasy_launcher.exe

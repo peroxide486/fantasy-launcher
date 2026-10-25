@@ -1,0 +1,15 @@
+*.bak
+*.bck
+*.exe
+*.log
+*.o
+*.pdb
+
+.DS_Store
+TAGS
+
+CMakeCache.txt
+CMakeFiles/
+build
+
+/lib/fltk
